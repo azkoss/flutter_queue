@@ -3,11 +3,15 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_queue/bean/cart_model.dart';
+import 'package:flutter_queue/bean/result_entity.dart';
+import 'package:flutter_queue/bean/user_counter.dart';
+import 'package:flutter_queue/utils/MyNetUtils.dart';
 import 'package:flutter_queue/utils/toast.dart';
 import 'package:flutter_queue/utils/values.dart';
 
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 ///购物车页面
 class CheckOutPage extends StatefulWidget {
   _CheckOutPageState createState() => _CheckOutPageState();
@@ -110,7 +114,8 @@ class _CheckOutPageState extends State<CheckOutPage> with SingleTickerProviderSt
         child: Text('提交订单', style: titleStyle),
         onPressed: () {
           if(cart.cartItems.length>0) {
-            cart.clearCart();
+            CounterModel user = Provider.of<CounterModel>(context);
+            createOrder(user.counter.rows.id,cart);
           }else{
             ToastUtils.showToast("当前购物车为空");
           }
@@ -122,6 +127,61 @@ class _CheckOutPageState extends State<CheckOutPage> with SingleTickerProviderSt
       ),
     );
   }
+
+  ///创建订单
+  Future createOrder(String uid, MyCart cart) async {
+    double amount = 0;
+    for(int i = 0;i<cart.cartItems.length;i++){
+      amount=cart.cartItems[i].quantity*cart.cartItems[i].food.price+amount;
+    }
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String merchantId = prefs.getString("merchantId");
+    Map<String, dynamic> map = Map();
+    Map<String, dynamic> header = Map();
+    map["cid"] = merchantId;
+    map["uid"] = uid;
+    map["amount"] = amount;
+    //创建订单
+    MyNetUtil.instance.getData("orderClient/addOrder", (value) async {
+      ResultEntity resultEntity = ResultEntity.fromJson(value);
+      if (resultEntity.success) {
+        bool isSuccess = createOrderDetails(cart,merchantId);
+        ToastUtils.showToast("提交订单成功");
+        if(isSuccess){
+          setState(() {
+            cart.clearCart();
+            ToastUtils.showToast("提交订单成功");
+          });
+        }
+      }
+    }, params: map, headers: header);
+  }
+
+  ///创建订单详情
+  bool createOrderDetails(MyCart cart, String merchantId) {
+    bool isSuccess = false;
+
+    for(int i = 0;i<cart.cartItems.length;i++){
+      Map<String, dynamic> map = Map();
+      Map<String, dynamic> header = Map();
+      map["did"] = cart.cartItems[i].food.id;
+      map["cid"] = merchantId;
+      map["amount"] = cart.cartItems[i].food.price*cart.cartItems[i].quantity;
+      map["num"] = cart.cartItems[i].quantity;
+      MyNetUtil.instance.getData("orderClient/addOrderDetails", (value) async {
+        ResultEntity resultEntity = ResultEntity.fromJson(value);
+        if (resultEntity.success) {
+          isSuccess = true;
+          setState(() {
+            cart.clearCart();
+          });
+        }
+      }, params: map, headers: header);
+    }
+    return isSuccess;
+  }
+
+
 
   Widget buildCartItemList(MyCart cart, CartItem cartModel) {
     return Card(
@@ -218,4 +278,6 @@ class _CheckOutPageState extends State<CheckOutPage> with SingleTickerProviderSt
       ),
     );
   }
+
+
 }

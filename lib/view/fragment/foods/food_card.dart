@@ -126,7 +126,7 @@ class _FoodCardState extends State<FoodCard> with SingleTickerProviderStateMixin
 
   addItemToCard() {
     final snackBar = SnackBar(
-      content: Text('${food.name} added to cart'),
+      content: Text('${food.name} 成功加入购物车'),
       duration: Duration(milliseconds: 500),
     );
     Scaffold.of(context).showSnackBar(snackBar);

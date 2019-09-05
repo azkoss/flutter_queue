@@ -164,9 +164,9 @@ class _MyHomePageState extends State<MyHomePage> {
   void getFoodList() {
     Map<String, dynamic> map = Map();
     Map<String, dynamic> header = Map();
-    String xid = foodTypeList[value].id;
-    String uid = widget.merchantRow.id;
-    MyNetUtil.instance.getData("foodClient/queryAllFood?uid=${uid.trim()}&xid=${xid.trim()}", (value) async {
+    map["uid"] = widget.merchantRow.id;
+    map["xid"] = foodTypeList[value].id;
+    MyNetUtil.instance.getData("foodClient/queryAllFood", (value) async {
       print("早早早菜：${value.toString()}");
       //获取所有菜系
       FoodEntity foodEntity = FoodEntity.fromJson(value);

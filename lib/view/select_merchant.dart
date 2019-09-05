@@ -7,6 +7,7 @@ import 'package:flutter_queue/view/failure/requestfailed.dart';
 import 'package:flutter_queue/view/homepage.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SelectMerchant extends StatefulWidget {
   @override
@@ -124,8 +125,9 @@ class itemBuild extends State<MerchantList> {
           itemCount: widget.mData.length,
           itemBuilder: (BuildContext context, int position) {
             return InkWell(
-              onTap: () {
-                //
+              onTap: () async {
+                SharedPreferences prefs = await SharedPreferences.getInstance();
+                prefs.setString("merchantId", widget.mData[position].id);
                 Navigator.push(
                   context,
                   new MaterialPageRoute(

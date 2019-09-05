@@ -8,6 +8,7 @@ import 'package:flutter_queue/utils/toast.dart';
 import 'package:flutter_queue/view/homepage.dart';
 import 'package:flutter_queue/view/select_merchant.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -262,43 +263,52 @@ class _LoginPageState extends State<LoginPage> {
         _userPassController.text != null &&
         _userNameController.text != "" &&
         _userPassController.text != "") {
-      Map<String, String> map = Map();
-      /*map["username"] = _userNameController.text;
+      pr = new ProgressDialog(context,ProgressDialogType.Normal);
+      pr.setMessage('正在登录...');
+      pr.show();
+      login();
+      pr.hide();
+    } else {
+      print("账号或密码为空");
+    }
+  }
+  ProgressDialog pr;
+
+  void login() {
+    Map<String, String> map = Map();
+    /*map["username"] = _userNameController.text;
       map["password"] = _userPassController.text;*/
-      MyNetUtil.instance.postData("userClient/login?username=${_userNameController.text}&password=${_userPassController.text}", (value) async {
-        UserEntity userEntity =UserEntity.fromJson(value);
-        print("userEntity$value");
-        if(userEntity.success){
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          prefs.setString("username", _userNameController.text);
-          prefs.setString("password", _userPassController.text);
-          if(userEntity.rows.merchant==0){
-            Provider.of<CounterModel>(context).increment(userEntity);
-            //先进行餐厅选择
-            Navigator.pushAndRemoveUntil(
-              context,
-              new MaterialPageRoute(builder: (context) => new SelectMerchant()),
-                  (route) => route == null,
-            );
-          }else if(userEntity.rows.merchant==2){
-            /*Navigator.pushAndRemoveUntil(
+    MyNetUtil.instance.postData("userClient/login?username=${_userNameController.text}&password=${_userPassController.text}", (value) async {
+      UserEntity userEntity =UserEntity.fromJson(value);
+      print("userEntity$value");
+      if(userEntity.success){
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setString("username", _userNameController.text);
+        prefs.setString("password", _userPassController.text);
+        if(userEntity.rows.merchant==0){
+          Provider.of<CounterModel>(context).increment(userEntity);
+          //先进行餐厅选择
+          Navigator.pushAndRemoveUntil(
+            context,
+            new MaterialPageRoute(builder: (context) => new SelectMerchant()),
+                (route) => route == null,
+          );
+        }else if(userEntity.rows.merchant==2){
+          /*Navigator.pushAndRemoveUntil(
               context,
               new MaterialPageRoute(builder: (context) => new Home()),
                   (route) => route == null,
             );*/
-            ToastUtils.showToast("商家功能暂未开放");
-          }else{
-            ToastUtils.showToast("账号被冻结或权限不够");
-          }
+          ToastUtils.showToast("商家功能暂未开放");
         }else{
-          ToastUtils.showToast("账号或用户名不匹配");
+          ToastUtils.showToast("账号被冻结或权限不够");
         }
+      }else{
+        ToastUtils.showToast("账号或用户名不匹配");
+      }
 
 
-      }, params: map);
-    } else {
-      print("账号或密码为空");
-    }
+    }, params: map);
   }
 
 }

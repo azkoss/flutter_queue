@@ -2,6 +2,8 @@ import 'package:flutter_queue/bean/articlebean_entity.dart';
 import 'package:flutter_queue/bean/food_entity.dart';
 import 'package:flutter_queue/bean/food_type_entity.dart';
 import 'package:flutter_queue/bean/merchant_entity.dart';
+import 'package:flutter_queue/bean/order_list_entity.dart';
+import 'package:flutter_queue/bean/result_entity.dart';
 import 'package:flutter_queue/bean/user_entity.dart';
 
 class EntityFactory {
@@ -16,6 +18,10 @@ class EntityFactory {
       return FoodTypeEntity.fromJson(json) as T;
     } else if (T.toString() == "MerchantEntity") {
       return MerchantEntity.fromJson(json) as T;
+    } else if (T.toString() == "OrderListEntity") {
+      return OrderListEntity.fromJson(json) as T;
+    } else if (T.toString() == "ResultEntity") {
+      return ResultEntity.fromJson(json) as T;
     } else if (T.toString() == "UserEntity") {
       return UserEntity.fromJson(json) as T;
     } else {

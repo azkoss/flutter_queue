@@ -12,6 +12,9 @@ void main() {
       providers: KColorConstant.getProviders(),
       child: MaterialApp(
         debugShowCheckedModeBanner: false, //取出debug
+        theme: ThemeData(          // Add the 3 lines from here...
+          primaryColor: Colors.orange,
+        ),
         title: 'Flutter Tutorial',
         home: Login(),
       ),

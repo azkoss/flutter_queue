@@ -99,7 +99,7 @@ class itemBuild extends State<MerchantList> {
       child: SmartRefresher(
         enablePullDown: true,
         enablePullUp: true,
-        header: RunningHeader(),
+        header: WaterDropHeader(),
         footer: CustomFooter(
           builder: (BuildContext context, LoadStatus mode) {
             Widget body;
@@ -172,7 +172,7 @@ class itemBuild extends State<MerchantList> {
       Map<String, dynamic> header = Map();
       //获取所有餐厅
       MyNetUtil.instance.getData("userClient/getAllMerchant", (value) async {
-        //获取所有菜系
+        //获取所有餐厅
         MerchantEntity foodTypeEntity = MerchantEntity.fromJson(value);
         if (foodTypeEntity.success) {
           widget.mData.clear();
@@ -194,11 +194,11 @@ class itemBuild extends State<MerchantList> {
       children: <Widget>[
         Container(
           width: ScreenUtil.screenWidth,
-          height: ScreenUtil().setHeight(455),
+          height: ScreenUtil().setHeight(320),
           decoration: BoxDecoration(
             //设置背景图片
             image: DecorationImage(
-              image: AssetImage("images/img_banner.png"),
+              image: NetworkImage(mData.heads),
               fit: BoxFit.cover,
             ),
           ),
@@ -208,10 +208,10 @@ class itemBuild extends State<MerchantList> {
               Container(
                 //id
                 margin: EdgeInsets.only(
-                    top: ScreenUtil().setHeight(100),
+                    top: ScreenUtil().setHeight(30),
                     left: ScreenUtil().setWidth(39)),
                 child: Text(
-                  "Test${mData.merchant}",
+                  mData.name!=null?mData.name:"",
                   style: TextStyle(
                       fontSize: ScreenUtil().setSp(60),
                       color: Colors.yellow,
@@ -221,15 +221,15 @@ class itemBuild extends State<MerchantList> {
               Container(
                 //标题
                 margin: EdgeInsets.only(
-                    top: ScreenUtil().setHeight(50),
+                    top: ScreenUtil().setHeight(20),
                     left: ScreenUtil().setWidth(36)),
                 child: Text(
-                  "${mData.name}",
+                  mData.gender!=null?mData.gender:"",
                   style: TextStyle(
-                      fontSize: ScreenUtil().setSp(60), color: Colors.white),
+                      fontSize: ScreenUtil().setSp(34), color: Colors.white),
                 ),
               ),
-              Container(
+              /*Container(
                 //描述
                 margin: EdgeInsets.only(
                     top: ScreenUtil().setHeight(10),
@@ -237,9 +237,9 @@ class itemBuild extends State<MerchantList> {
                 child: Text(
                   "${mData.phone}",
                   style: TextStyle(
-                      fontSize: ScreenUtil().setSp(40), color: Colors.white),
+                      fontSize: ScreenUtil().setSp(40), color: Colors.orange),
                 ),
-              )
+              )*/
             ],
           ),
         ),

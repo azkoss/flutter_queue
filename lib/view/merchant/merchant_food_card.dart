@@ -2,19 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_queue/bean/cart_model.dart';
 import 'package:flutter_queue/bean/food_entity.dart';
 import 'package:flutter_queue/bean/food_model.dart';
+import 'package:flutter_queue/bean/result_entity.dart';
+import 'package:flutter_queue/utils/MyNetUtils.dart';
+import 'package:flutter_queue/utils/toast.dart';
 import 'package:flutter_queue/utils/values.dart';
-
+import 'package:flutter_queue/utils/view/customdialog.dart';
+import 'package:flutter_queue/view/merchant/update_food.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
 
-class FoodCard extends StatefulWidget {
+class MerchantFoodCard extends StatefulWidget {
   final FoodRow food;
-  FoodCard(this.food);
+
+  MerchantFoodCard(this.food);
 
   _FoodCardState createState() => _FoodCardState();
 }
 
-class _FoodCardState extends State<FoodCard> with SingleTickerProviderStateMixin {
+class _FoodCardState extends State<MerchantFoodCard>
+    with SingleTickerProviderStateMixin {
   FoodRow get food => widget.food;
 
   @override
@@ -44,19 +50,32 @@ class _FoodCardState extends State<FoodCard> with SingleTickerProviderStateMixin
   Widget buildImage() {
     return ClipRRect(
       borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
-      child: Image.network(
-        food.img!=null?food.img:"",
-        fit: BoxFit.fill,
-        height: MediaQuery.of(context).size.height / 6,
-        loadingBuilder: (context, Widget child, ImageChunkEvent progress) {
-          if (progress == null) return child;
-          return Center(
-            child: Padding(
-              padding: EdgeInsets.all(32),
-              child: CircularProgressIndicator(value: progress.expectedTotalBytes != null ? progress.cumulativeBytesLoaded / progress.expectedTotalBytes : null),
-            ),
+      child: InkWell(
+        onTap: () {
+          Navigator.push(
+            context,
+            new MaterialPageRoute(builder: (context) => new UpdateFood(food)),
           );
+          ToastUtils.showToast("sss");
         },
+        child: Image.network(
+          food.img != null ? food.img : "",
+          fit: BoxFit.fill,
+          height: MediaQuery.of(context).size.height / 6,
+          loadingBuilder: (context, Widget child, ImageChunkEvent progress) {
+            if (progress == null) return child;
+            return Center(
+              child: Padding(
+                padding: EdgeInsets.all(32),
+                child: CircularProgressIndicator(
+                    value: progress.expectedTotalBytes != null
+                        ? progress.cumulativeBytesLoaded /
+                            progress.expectedTotalBytes
+                        : null),
+              ),
+            );
+          },
+        ),
       ),
     );
   }
@@ -114,9 +133,9 @@ class _FoodCardState extends State<FoodCard> with SingleTickerProviderStateMixin
             color: mainColor,
             child: InkWell(
               onTap: addItemToCard,
-              splashColor: Colors.white70,
+              splashColor: Colors.red,
               customBorder: roundedRectangle4,
-              child: Icon(Icons.add),
+              child: Icon(Icons.delete_forever),
             ),
           )
         ],
@@ -126,10 +145,28 @@ class _FoodCardState extends State<FoodCard> with SingleTickerProviderStateMixin
 
   addItemToCard() {
     final snackBar = SnackBar(
-      content: Text('${food.name} 成功加入购物车'),
-      duration: Duration(milliseconds: 500),
+      content: Text('是否删除${food.name}？'),
+      duration: Duration(milliseconds: 2000),
+      action: SnackBarAction(
+        label: "删除",
+        onPressed: () {
+          deleteFood(food.id);
+        },
+      ),
     );
     Scaffold.of(context).showSnackBar(snackBar);
-    Provider.of<MyCart>(context).addItem(CartItem(food: food, quantity: 1));
+  }
+
+  ///删除菜品
+  void deleteFood(String id) {
+    Map<String, dynamic> map = Map();
+    Map<String, dynamic> header = Map();
+    map["id"] = id;
+    MyNetUtil.instance.getData("foodClient/deleteFood", (value) async {
+      ResultEntity resultEntity = ResultEntity.fromJson(value);
+      if (resultEntity.success) {
+        ToastUtils.showToast("删除成功");
+      }
+    }, params: map, headers: header);
   }
 }

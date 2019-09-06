@@ -3,6 +3,7 @@ import 'package:flutter_queue/bean/user_counter.dart';
 import 'package:flutter_queue/utils/toast.dart';
 import 'package:flutter_queue/utils/view/customdialog.dart';
 import 'package:flutter_queue/view/fragment/my/home_information.dart';
+import 'package:flutter_queue/view/fragment/my/home_order.dart';
 import 'package:flutter_queue/view/login/login.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
@@ -23,7 +24,7 @@ class _HomeMyPageState extends State<HomeMyPage> {
         Column(
           children: <Widget>[
             Container(
-              color: Colors.blue,
+              color: Colors.orange,
               width: ScreenUtil.screenWidth,
               height: ScreenUtil().setHeight(600),
               child: Row(
@@ -77,7 +78,7 @@ class _HomeMyPageState extends State<HomeMyPage> {
                     borderRadius: BorderRadius.all(Radius.circular(5.0))),
                 color: Colors.white,
                 //设置阴影
-                elevation: 6.0,
+                elevation: 4.0,
                 child: Container(
                   height: ScreenUtil().setHeight(720),
                   width: ScreenUtil().setWidth(980),
@@ -151,7 +152,7 @@ class _HomeMyPageState extends State<HomeMyPage> {
                                   ),
                                   child: Icon(
                                     Icons.camera,
-                                    color: Colors.blue,
+                                    color: Colors.orange,
                                     size: ScreenUtil().setHeight(65),
                                   ),
                                 ),
@@ -403,7 +404,7 @@ class _HomeMyPageState extends State<HomeMyPage> {
                   borderRadius: BorderRadius.all(Radius.circular(5.0))),
               color: Colors.white,
               //设置阴影
-              elevation: 6.0,
+              elevation: 4.0,
               child: Container(
                 padding: EdgeInsets.all(ScreenUtil().setHeight(15)),
                 width: ScreenUtil().setWidth(980),
@@ -442,6 +443,12 @@ class _HomeMyPageState extends State<HomeMyPage> {
                     InkWell(
                       onTap: () {
                         ToastUtils.showToast("我的订单");
+                        Navigator.push(
+                          context,
+                          new MaterialPageRoute(
+                              builder: (context) =>
+                              new HomeOrder(0)),
+                        );
                       },
                       child: Column(
                         children: <Widget>[
@@ -459,7 +466,13 @@ class _HomeMyPageState extends State<HomeMyPage> {
                     ),
                     InkWell(
                       onTap: () {
-                        ToastUtils.showToast("我的订单2");
+                        ToastUtils.showToast("等待付款");
+                        Navigator.push(
+                          context,
+                          new MaterialPageRoute(
+                              builder: (context) =>
+                              new HomeOrder(1)),
+                        );
                       },
                       child: Column(
                         children: <Widget>[
@@ -468,7 +481,7 @@ class _HomeMyPageState extends State<HomeMyPage> {
                             width: ScreenUtil().setHeight(100),
                             height: ScreenUtil().setHeight(100),
                           ),
-                          Text("期待评价",style: TextStyle(
+                          Text("等待付款",style: TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: ScreenUtil().setSp(36),
                           ),)
@@ -477,7 +490,13 @@ class _HomeMyPageState extends State<HomeMyPage> {
                     ),
                     InkWell(
                       onTap: () {
-                        ToastUtils.showToast("待评价");
+                        ToastUtils.showToast("已经付款");
+                        Navigator.push(
+                          context,
+                          new MaterialPageRoute(
+                              builder: (context) =>
+                              new HomeOrder(2)),
+                        );
                       },
                       child: Column(
                         children: <Widget>[
@@ -486,7 +505,7 @@ class _HomeMyPageState extends State<HomeMyPage> {
                             width: ScreenUtil().setHeight(100),
                             height: ScreenUtil().setHeight(100),
                           ),
-                          Text("等待收货",style: TextStyle(
+                          Text("已经付款",style: TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: ScreenUtil().setSp(36),
                           ),)
@@ -495,7 +514,7 @@ class _HomeMyPageState extends State<HomeMyPage> {
                     ),
                     InkWell(
                       onTap: () {
-                        ToastUtils.showToast("我的订单4");
+                        ToastUtils.showToast("暂未开发");
                       },
                       child: Column(
                         children: <Widget>[

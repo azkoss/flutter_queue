@@ -14,10 +14,33 @@ class HomeInformation extends StatefulWidget {
 
 class PlaygroundState extends State<HomeInformation> {
 
-  var name = new TextEditingController();
-  var gender = new TextEditingController();
-  var heads = new TextEditingController();
-  var phone = new TextEditingController();
+  var name;
+  var gender;
+  var heads;
+  var phone;
+
+  String names;
+  String genders;
+  String head;
+  String phones;
+
+
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+    initData();
+  }
+
+  ///加载数据
+  void initData() {
+    CounterModel user = Provider.of<CounterModel>(context);
+    names = user.counter.rows.name;
+    genders = user.counter.rows.gender;
+    head = user.counter.rows.heads;
+    phones = user.counter.rows.phone;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +48,7 @@ class PlaygroundState extends State<HomeInformation> {
     return new Scaffold(
       appBar: new AppBar(
         title: new Text("个人信息"),
-        backgroundColor: Color(0xFF1E88E5), //设置appbar背景颜色
+        backgroundColor: Colors.orange, //设置appbar背景颜色
         centerTitle: true, //设置标题是否局中
       ),
       body: ListView(
@@ -45,7 +68,10 @@ class PlaygroundState extends State<HomeInformation> {
                     icon: Icon(Icons.text_fields),
                     hintText: "请输入昵称",
                   ),
-                  controller: name
+                  controller: name = new TextEditingController(text: names),
+                onChanged: (value) {
+                  names = value;
+                },
               ),
               Container(
                 height: ScreenUtil().setHeight(30),
@@ -58,7 +84,10 @@ class PlaygroundState extends State<HomeInformation> {
                   icon: Icon(Icons.text_fields),
                   hintText: "请输入性别",
                 ),
-                controller: gender,
+                controller: gender = new TextEditingController(text: genders),
+                onChanged: (value) {
+                  genders = value;
+                },
               ),
               Container(
                 height: ScreenUtil().setHeight(30),
@@ -71,7 +100,10 @@ class PlaygroundState extends State<HomeInformation> {
                   icon: Icon(Icons.text_fields),
                   hintText: "请输入头像地址",
                 ),
-                controller: heads,
+                controller: heads = new TextEditingController(text: head),
+                onChanged: (value) {
+                  head = value;
+                },
               ),
               Container(
                 height: ScreenUtil().setHeight(30),
@@ -84,7 +116,10 @@ class PlaygroundState extends State<HomeInformation> {
                   icon: Icon(Icons.text_fields),
                   hintText: "请输入联系方式",
                 ),
-                controller: phone,
+                controller: phone = new TextEditingController(text: phones),
+                onChanged: (value) {
+                  phones = value;
+                },
               ),
               Container(
                 width: ScreenUtil().setWidth(750),
@@ -102,7 +137,7 @@ class PlaygroundState extends State<HomeInformation> {
                   elevation: 6.0,
                   child: new FlatButton(
                       onPressed: () {
-                        saveUpdate(user.counter.rows.id);
+                        saveUpdate(user.counter);
                       },
                       child: new Padding(
                         padding: new EdgeInsets.all(10.0),
@@ -121,7 +156,7 @@ class PlaygroundState extends State<HomeInformation> {
     );
   }
 
-  void saveUpdate(String id) {
+  void saveUpdate(UserEntity user) {
     if (name.text != null &&
         gender.text != null &&
         heads.text != null &&
@@ -136,7 +171,7 @@ class PlaygroundState extends State<HomeInformation> {
       map["name"] = name;
       map["heads"] = heads;
       map["phone"] = phone;*/
-      MyNetUtil.instance.postData("userClient/modifyInformation?id=$id&gender=${gender.text}&name=${name.text}&heads=${heads.text}&phone=${phone.text}", (value) async {
+      MyNetUtil.instance.postData("userClient/modifyInformation?id=${user.rows.id}&gender=${gender.text}&name=${name.text}&heads=${user.rows.heads}&phone=${phone.text}", (value) async {
         UserEntity userEntity =UserEntity.fromJson(value);
         print("userEntity$value");
         if(userEntity.success){

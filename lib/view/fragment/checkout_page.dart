@@ -145,7 +145,7 @@ class _CheckOutPageState extends State<CheckOutPage> with SingleTickerProviderSt
     MyNetUtil.instance.getData("orderClient/addOrder", (value) async {
       ResultEntity resultEntity = ResultEntity.fromJson(value);
       if (resultEntity.success) {
-        bool isSuccess = createOrderDetails(cart,merchantId);
+        bool isSuccess = createOrderDetails(cart,merchantId,resultEntity.rows);
         ToastUtils.showToast("提交订单成功");
         if(isSuccess){
           setState(() {
@@ -158,14 +158,14 @@ class _CheckOutPageState extends State<CheckOutPage> with SingleTickerProviderSt
   }
 
   ///创建订单详情
-  bool createOrderDetails(MyCart cart, String merchantId) {
+  bool createOrderDetails(MyCart cart, String merchantId,String did) {
     bool isSuccess = false;
 
     for(int i = 0;i<cart.cartItems.length;i++){
       Map<String, dynamic> map = Map();
       Map<String, dynamic> header = Map();
-      map["did"] = cart.cartItems[i].food.id;
-      map["cid"] = merchantId;
+      map["did"] = did;
+      map["cid"] = cart.cartItems[i].food.id;
       map["amount"] = cart.cartItems[i].food.price*cart.cartItems[i].quantity;
       map["num"] = cart.cartItems[i].quantity;
       MyNetUtil.instance.getData("orderClient/addOrderDetails", (value) async {
@@ -256,7 +256,7 @@ class _CheckOutPageState extends State<CheckOutPage> with SingleTickerProviderSt
                     height: 45,
                     width: 70,
                     child: Text(
-                      '\$ ${cartModel.food.price}',
+                      '\￥ ${cartModel.food.price}',
                       style: titleStyle,
                       textAlign: TextAlign.end,
                     ),

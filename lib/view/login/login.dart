@@ -6,6 +6,7 @@ import 'package:flutter_queue/bean/user_entity.dart';
 import 'package:flutter_queue/utils/MyNetUtils.dart';
 import 'package:flutter_queue/utils/toast.dart';
 import 'package:flutter_queue/view/homepage.dart';
+import 'package:flutter_queue/view/merchant/merchant_home_page.dart';
 import 'package:flutter_queue/view/select_merchant.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:progress_dialog/progress_dialog.dart';
@@ -263,11 +264,8 @@ class _LoginPageState extends State<LoginPage> {
         _userPassController.text != null &&
         _userNameController.text != "" &&
         _userPassController.text != "") {
-      pr = new ProgressDialog(context,ProgressDialogType.Normal);
-      pr.setMessage('正在登录...');
-      pr.show();
+
       login();
-      pr.hide();
     } else {
       print("账号或密码为空");
     }
@@ -275,6 +273,9 @@ class _LoginPageState extends State<LoginPage> {
   ProgressDialog pr;
 
   void login() {
+    pr = new ProgressDialog(context,ProgressDialogType.Normal);
+    pr.setMessage('正在登录...');
+    pr.show();
     Map<String, String> map = Map();
     /*map["username"] = _userNameController.text;
       map["password"] = _userPassController.text;*/
@@ -285,30 +286,32 @@ class _LoginPageState extends State<LoginPage> {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.setString("username", _userNameController.text);
         prefs.setString("password", _userPassController.text);
+        Provider.of<CounterModel>(context).increment(userEntity);
         if(userEntity.rows.merchant==0){
-          Provider.of<CounterModel>(context).increment(userEntity);
+
           //先进行餐厅选择
           Navigator.pushAndRemoveUntil(
             context,
             new MaterialPageRoute(builder: (context) => new SelectMerchant()),
                 (route) => route == null,
           );
+          ToastUtils.showToast("登录成功");
         }else if(userEntity.rows.merchant==2){
-          /*Navigator.pushAndRemoveUntil(
+          Navigator.pushAndRemoveUntil(
               context,
-              new MaterialPageRoute(builder: (context) => new Home()),
+              new MaterialPageRoute(builder: (context) => new MerChantHome(userEntity.rows)),
                   (route) => route == null,
-            );*/
-          ToastUtils.showToast("商家功能暂未开放");
+            );
+          ToastUtils.showToast("登录成功");
         }else{
           ToastUtils.showToast("账号被冻结或权限不够");
         }
       }else{
         ToastUtils.showToast("账号或用户名不匹配");
       }
-
-
+      pr.hide();
     }, params: map);
+    pr.hide();
   }
 
 }

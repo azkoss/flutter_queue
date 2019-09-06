@@ -8,18 +8,17 @@ import 'package:flutter_queue/bean/user_counter.dart';
 import 'package:flutter_queue/utils/MyNetUtils.dart';
 import 'package:flutter_queue/utils/values.dart';
 import 'package:flutter_queue/view/failure/requestfailed.dart';
-import 'package:flutter_queue/view/fragment/home/add_queue.dart';
+import 'package:flutter_queue/view/fragment/foods/food_card.dart';
+import 'package:flutter_queue/view/merchant/add_food.dart';
+import 'package:flutter_queue/view/merchant/merchant_food_card.dart';
 import 'package:provider/provider.dart';
-
-import 'foods/cart_bottom_sheet.dart';
-import 'foods/food_card.dart';
 
 //应用首页
 // ignore: must_be_immutable
-class MyHomePage extends StatefulWidget {
+class MerchantMyHomePage extends StatefulWidget {
   MerchantRow merchantRow;
 
-  MyHomePage(MerchantRow merchantRow) {
+  MerchantMyHomePage(MerchantRow merchantRow) {
     this.merchantRow = merchantRow;
   }
 
@@ -27,7 +26,7 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MerchantMyHomePage> {
   int value = 1;
   List<FoodTypeRow> foodTypeList = new List();
   List<FoodRow> foodList = new List();
@@ -36,14 +35,6 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     initData();
-  }
-
-  showCart() {
-    showModalBottomSheet(
-      shape: roundedRectangle40,
-      context: context,
-      builder: (context) => CartBottomSheet(),
-    );
   }
 
   @override
@@ -68,42 +59,18 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget buildAppBar() {
-    int items = 0;
-    Provider.of<MyCart>(context).cartItems.forEach((cart) {
-      items += cart.quantity;
-    });
+    CounterModel user = Provider.of<CounterModel>(context);
     return SafeArea(
       child: Row(
         children: <Widget>[
-          Text('首页', style: headerStyle),
+          Text(user.counter.rows.name != null ? user.counter.rows.name : "",
+              style: headerStyle),
           Spacer(),
           IconButton(
-              icon: Icon(Icons.queue),
+              icon: Icon(Icons.add),
               onPressed: () {
-                Navigator.push(
-                  context,
-                  new MaterialPageRoute(
-                      builder: (context) => new AddQueue(widget.merchantRow.id)),
-                );
+                addFood();
               }),
-          Stack(
-            children: <Widget>[
-              IconButton(icon: Icon(Icons.shopping_cart), onPressed: showCart),
-              Positioned(
-                right: 0,
-                child: Container(
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.all(4),
-                  decoration:
-                      BoxDecoration(shape: BoxShape.circle, color: mainColor),
-                  child: Text(
-                    '$items',
-                    style: TextStyle(fontSize: 12, color: Colors.black),
-                  ),
-                ),
-              ),
-            ],
-          ),
         ],
       ),
     );
@@ -148,7 +115,7 @@ class _MyHomePageState extends State<MyHomePage> {
         crossAxisCount: 2,
         physics: BouncingScrollPhysics(),
         children: foodList.map((food) {
-          return FoodCard(food);
+          return MerchantFoodCard(food);
         }).toList(),
       ),
     );
@@ -186,5 +153,14 @@ class _MyHomePageState extends State<MyHomePage> {
       }
       setState(() {});
     }, params: map, headers: header);
+  }
+
+  ///跳转到添加页面
+  void addFood() {
+    //String foodTypeId = foodTypeList[value].id;
+    Navigator.push(
+      context,
+      new MaterialPageRoute(builder: (context) => new AddFood()),
+    );
   }
 }

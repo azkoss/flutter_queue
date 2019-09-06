@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_queue/bean/navigationiconbean.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class BottomNavigationWidget extends StatefulWidget {
+class MerChantBottomNavigationWidget extends StatefulWidget {
   ValueChanged tapCallBaack;
 
-  BottomNavigationWidget(this.tapCallBaack);
+  MerChantBottomNavigationWidget(this.tapCallBaack);
 
   @override
   State<StatefulWidget> createState() {
@@ -13,7 +13,7 @@ class BottomNavigationWidget extends StatefulWidget {
   }
 }
 
-class BottomNavigationWidgetState extends State<BottomNavigationWidget>
+class BottomNavigationWidgetState extends State<MerChantBottomNavigationWidget>
     with TickerProviderStateMixin {
   int _currentIndex = 0;
   List<NavigationIconView> _navigationViews; // 底部图标按钮区域
@@ -33,7 +33,7 @@ class BottomNavigationWidgetState extends State<BottomNavigationWidget>
           icon: new Icon(Icons.home), title: new Text("首页"), vsync: this),
       // vsync 默认属性和参数
       new NavigationIconView(
-          icon: new Icon(Icons.book), title: new Text("购物车"), vsync: this),
+          icon: new Icon(Icons.book), title: new Text("顾客"), vsync: this),
       new NavigationIconView(
           icon: new Icon(Icons.person), title: new Text("我的"), vsync: this),
     ];

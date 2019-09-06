@@ -33,8 +33,9 @@ class MerchantRow {
 	String id;
 	String heads;
 	String account;
+	String gender;
 
-	MerchantRow({this.password, this.phone, this.name, this.merchant, this.id, this.heads, this.account});
+	MerchantRow({this.password, this.phone, this.name, this.merchant, this.id, this.heads, this.account, this.gender});
 
 	MerchantRow.fromJson(Map<String, dynamic> json) {
 		password = json['password'];
@@ -44,6 +45,7 @@ class MerchantRow {
 		id = json['id'];
 		heads = json['heads'];
 		account = json['account'];
+		gender = json['gender'];
 	}
 
 	Map<String, dynamic> toJson() {
@@ -55,12 +57,13 @@ class MerchantRow {
 		data['id'] = this.id;
 		data['heads'] = this.heads;
 		data['account'] = this.account;
+		data['gender'] = this.gender;
 		return data;
 	}
 
 	@override
 	String toString() {
-		return 'MerchantRow{password: $password, phone: $phone, name: $name, merchant: $merchant, id: $id, heads: $heads, account: $account}';
+		return 'MerchantRow{password: $password, phone: $phone, name: $name, merchant: $merchant, id: $id, heads: $heads, account: $account, gender: $gender}';
 	}
 
 

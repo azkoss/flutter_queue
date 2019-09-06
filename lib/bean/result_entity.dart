@@ -21,4 +21,11 @@ class ResultEntity {
     }
     return data;
   }
+
+  @override
+  String toString() {
+    return 'ResultEntity{msg: $msg, success: $success, rows: $rows}';
+  }
+
+
 }

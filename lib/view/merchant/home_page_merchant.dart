@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_queue/bean/cart_model.dart';
 import 'package:flutter_queue/bean/food_entity.dart';
-import 'package:flutter_queue/bean/food_model.dart';
 import 'package:flutter_queue/bean/food_type_entity.dart';
 import 'package:flutter_queue/bean/merchant_entity.dart';
 import 'package:flutter_queue/bean/user_counter.dart';
 import 'package:flutter_queue/utils/MyNetUtils.dart';
 import 'package:flutter_queue/utils/values.dart';
-import 'package:flutter_queue/view/failure/requestfailed.dart';
-import 'package:flutter_queue/view/fragment/foods/food_card.dart';
 import 'package:flutter_queue/view/merchant/add_food.dart';
 import 'package:flutter_queue/view/merchant/merchant_food_card.dart';
 import 'package:provider/provider.dart';

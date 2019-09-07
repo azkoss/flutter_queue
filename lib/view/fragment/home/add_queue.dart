@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_queue/bean/merchant_entity.dart';
 import 'package:flutter_queue/bean/result_entity.dart';
 import 'package:flutter_queue/bean/user_counter.dart';
 import 'package:flutter_queue/bean/user_entity.dart';
@@ -8,12 +9,11 @@ import 'package:provider/provider.dart';
 
 ///用户排队页面
 class AddQueue extends StatefulWidget {
-  String merchantId;
+  MerchantRow merchantRow;
 
-  AddQueue(String id) {
-    this.merchantId = id;
+  AddQueue(MerchantRow merchantRow) {
+    this.merchantRow = merchantRow;
   }
-
   @override
   PlaygroundState createState() => new PlaygroundState();
 }
@@ -41,7 +41,7 @@ class PlaygroundState extends State<AddQueue> {
   void initData() {
     Map<String, dynamic> map = Map();
     Map<String, dynamic> header = Map();
-    map["sid"] = widget.merchantId;
+    map["sid"] = widget.merchantRow.id;
     MyNetUtil.instance.getData("queueClient/getQueueCount", (value) async {
       print("获取当前饭店排队数量：${value.toString()}");
       //获取所有菜系
@@ -61,7 +61,7 @@ class PlaygroundState extends State<AddQueue> {
     CounterModel user = Provider.of<CounterModel>(context);
     Map<String, dynamic> map = Map();
     Map<String, dynamic> header = Map();
-    map["sid"] = widget.merchantId;
+    map["sid"] = widget.merchantRow.id;
     map["zid"] = user.counter.rows.id;
     MyNetUtil.instance.getData("queueClient/isHaveQueue", (value) async {
       //print("早早早菜：${value.toString()}");
@@ -86,7 +86,7 @@ class PlaygroundState extends State<AddQueue> {
       Map<String, dynamic> map = Map();
       Map<String, dynamic> header = Map();
       map["id"] = queueId;
-      map["sid"] = widget.merchantId;
+      map["sid"] = widget.merchantRow.id;
       MyNetUtil.instance.getData("queueClient/deleteQueue", (value) async {
         print("早早早d菜：${value.toString()}");
         //获取所有菜系
@@ -102,7 +102,7 @@ class PlaygroundState extends State<AddQueue> {
     }else {
       Map<String, dynamic> map = Map();
       Map<String, dynamic> header = Map();
-      map["sid"] = widget.merchantId;
+      map["sid"] = widget.merchantRow.id;
       map["zid"] = user.id;
       map["name"] = user.name;
       MyNetUtil.instance.getData("queueClient/addQueue", (value) async {
@@ -130,36 +130,33 @@ class PlaygroundState extends State<AddQueue> {
         title: new Text("用户排队"),
         backgroundColor: Colors.orange, //设置appbar背景颜色
         centerTitle: true, //设置标题是否局中
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.refresh),
+              tooltip: 'Restitch it',
+              onPressed: (){ initData();},
+            ),
+          ],
+
       ),
       body: new Container(
         //color: Colors.orange,   http://img3.imgtn.bdimg.com/it/u=2892725593,305691722&fm=26&gp=0.jpg
         width: ScreenUtil.screenWidth,
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage("images/index/img_index_bg.png"),
+            image: NetworkImage(widget.merchantRow.heads!=null?widget.merchantRow.heads:""),
             fit: BoxFit.cover,
           ),
         ),
         child: Column(
           children: <Widget>[
             Container(
-
-              //width: ScreenUtil().setWidth(700),
-              margin: EdgeInsets.all(ScreenUtil().setWidth(70)),
-              child: new Card(
-                color: Colors.orange,
-                elevation: 6.0,
-                child: new FlatButton(
-                    onPressed: () {
-                      initData();
-                    },
-                    child: new Padding(
-                      padding: new EdgeInsets.all(ScreenUtil().setWidth(30)),
-                      child: Text("刷新",style: TextStyle(color: Colors.white,fontSize: ScreenUtil().setSp(40)),),
-                    )),
-              ),
+              margin: EdgeInsets.only(top: ScreenUtil().setWidth(200),bottom: ScreenUtil().setWidth(50)),
+              child: Text("当前餐厅排队人数：",style: TextStyle(fontSize: ScreenUtil().setSp(50),color: Colors.white),),
             ),
-
+            Container(
+              child: Text("$num",style: TextStyle(fontSize: ScreenUtil().setSp(100),color: Colors.white),),
+            ),
             Container(
               margin: EdgeInsets.all(ScreenUtil().setWidth(40)),
               child: InkWell(
@@ -174,8 +171,6 @@ class PlaygroundState extends State<AddQueue> {
                           ? user.counter.rows.heads
                           : ""),*/
                   child: Container(
-                    width: ScreenUtil().setWidth(250),
-                    height: ScreenUtil().setWidth(250),
                     child:Center(
                       child:  Text(btnName,style: TextStyle(color: Colors.white),),
                     ),
@@ -183,10 +178,7 @@ class PlaygroundState extends State<AddQueue> {
                 ),
               ),
             ),
-            Container(
-              margin: EdgeInsets.all(ScreenUtil().setWidth(40)),
-              child: Text("当前餐厅排队人数：$num",style: TextStyle(fontSize: ScreenUtil().setSp(50)),),
-            ),
+
           ],
         ),
       ),

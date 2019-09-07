@@ -75,6 +75,15 @@ class _CheckOutPageState extends State<MerchantCustomer>
             children: <Widget>[
               ...buildHeader(),
               //cart items list
+              Container(
+                margin: EdgeInsets.only(top: ScreenUtil().setHeight(30)),
+                child: Text(
+                  "当前有${rows.length > 0?rows.length:0}名顾客排队",
+                  style: TextStyle(
+                      color: Colors.black87,
+                      fontSize: ScreenUtil().setSp(48)),
+                ),
+              ),
               rows.length > 0
                   ? ListView.builder(
                       itemCount: rows.length,
@@ -106,13 +115,60 @@ class _CheckOutPageState extends State<MerchantCustomer>
       SafeArea(
         child: Row(
           children: <Widget>[
-            Text('顾客排队', style: headerStyle),
+            Text("顾客排队",
+                style: headerStyle),
             Spacer(),
+            IconButton(
+                icon: Icon(Icons.refresh),
+                onPressed: () {
+                  getAllQueue();
+                }),
+            IconButton(
+                icon: Icon(Icons.add),
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (_) {
+                        return CustomDialog(
+                          confirmCallback: () {
+                            //跳转到登陆页面
+                            addQueue();
+                          },
+                          confirmContent: "新增",
+                          content: '你确定要新增排队吗?',
+                          confirmColor: Colors.blue,
+                        );
+                      });
+                }),
           ],
         ),
       ),
     ];
   }
+
+  ///开始排队
+  void addQueue() {
+      CounterModel user = Provider.of<CounterModel>(context);
+      Map<String, dynamic> map = Map();
+      Map<String, dynamic> header = Map();
+      map["sid"] = user.counter.rows.id;
+      map["zid"] = "";
+      map["name"] = "店内用户";
+      MyNetUtil.instance.getData("queueClient/addQueue", (value) async {
+        print("早早早菜ss：${value.toString()}");
+        //获取所有菜系
+        ResultEntity resultEntity = ResultEntity.fromJson(value);
+        if(resultEntity.success) {
+          print("早早早菜sscs：${resultEntity.toString()}");
+          setState(() {
+            getAllQueue();
+            ToastUtils.showToast("排队成功");
+          });
+        }
+      }, params: map, headers: header);
+  }
+
 
   Widget buildCartItemList(QueueListRow queue) {
     return Card(
@@ -141,7 +197,7 @@ class _CheckOutPageState extends State<MerchantCustomer>
                   Container(
                     margin: EdgeInsets.only(top: ScreenUtil().setHeight(35)),
                     child: Text(
-                      '${queue.createdate}',
+                      '编号：${queue.progress}',
                       style: subtitleStyle,
                       textAlign: TextAlign.center,
                     ),
@@ -174,8 +230,6 @@ class _CheckOutPageState extends State<MerchantCustomer>
                                 builder: (_) {
                                   return CustomDialog(
                                     confirmCallback: () {
-                                      //跳转到登陆页面
-                                      ToastUtils.showToast("叫号");
                                       cancelQueue(queue.id, queue.sid);
                                     },
                                     confirmContent: "叫号",

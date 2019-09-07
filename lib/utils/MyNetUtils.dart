@@ -11,7 +11,7 @@ class MyNetUtil {
     connectTimeout:50000,
     contentType: ContentType('application', 'json', charset: 'utf-8'),
     receiveTimeout: 50000,
-    baseUrl: "http://10.1.44.1:8080/",
+    baseUrl: "http://114.116.42.235:8088/queue/",
     followRedirects: true,
   );
   static Map<String, dynamic> smap = new Map();

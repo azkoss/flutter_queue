@@ -83,7 +83,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 Navigator.push(
                   context,
                   new MaterialPageRoute(
-                      builder: (context) => new AddQueue(widget.merchantRow.id)),
+                      builder: (context) => new AddQueue(widget.merchantRow)),
                 );
               }),
           Stack(

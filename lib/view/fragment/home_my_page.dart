@@ -373,9 +373,11 @@ class _HomeMyPageState extends State<HomeMyPage> {
                           builder: (_) {
                             return CustomDialog(
                               confirmCallback: () {//跳转到登陆页面
-                                Navigator.of(context).push(new MaterialPageRoute(builder: (context) {
-                                  return Login();
-                                }));
+                                Navigator.pushAndRemoveUntil(
+                                  context,
+                                  new MaterialPageRoute(builder: (context) => new Login()),
+                                      (route) => route == null,
+                                );
                               },
                               confirmContent: "退出",
                               content: '你确定要退出登录吗?',

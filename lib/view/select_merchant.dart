@@ -53,7 +53,7 @@ class SelectMerchantState extends State<SelectMerchant> {
     return new Scaffold(
       appBar: new AppBar(
         title: new Text("选择餐厅"),
-        backgroundColor: Color(0xFF1E88E5), //设置appbar背景颜色
+        backgroundColor: Colors.orange, //设置appbar背景颜色
         centerTitle: true, //设置标题是否局中
       ),
       body: mData.length <= 0

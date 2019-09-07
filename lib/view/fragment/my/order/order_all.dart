@@ -107,7 +107,7 @@ class HomeEvaluateAllState extends State<OrderAll> {
     _refreshController.loadComplete();
   }
 
-  //加载实体类
+  ///加载实体类
   void load(int page) async {
     if (page == 1) {
       orderList.clear();
@@ -160,7 +160,7 @@ class HomeEvaluateAllState extends State<OrderAll> {
     }, params: map, headers: header);
   }
 
-  //构建列表
+  ///构建列表
   Widget getItem(OrderListRow orderListRow) {
     return InkWell(
       onTap: () {

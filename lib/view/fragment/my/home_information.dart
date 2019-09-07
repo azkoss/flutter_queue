@@ -14,10 +14,10 @@ class HomeInformation extends StatefulWidget {
 
 class PlaygroundState extends State<HomeInformation> {
 
-  var name;
-  var gender;
-  var heads;
-  var phone;
+  TextEditingController name;
+  TextEditingController gender;
+  TextEditingController heads;
+  TextEditingController phone;
 
   String names;
   String genders;
@@ -166,19 +166,20 @@ class PlaygroundState extends State<HomeInformation> {
         phone.text != "" &&
         gender.text != "") {
       Map<String, String> map = Map();
-      /*map["id"] = id;
-      map["gender"] = gender;
-      map["name"] = name;
-      map["heads"] = heads;
-      map["phone"] = phone;*/
-      MyNetUtil.instance.postData("userClient/modifyInformation?id=${user.rows.id}&gender=${gender.text}&name=${name.text}&heads=${user.rows.heads}&phone=${phone.text}", (value) async {
+      map["id"] = user.rows.id;
+      map["gender"] = gender.text;
+      map["name"] = name.text;
+      map["heads"] = "${user.rows.heads}";
+      map["phone"] = phone.text;
+      print("哈哈哈"+map.toString());
+      MyNetUtil.instance.getData("userClient/modifyInformation", (value) async {
         UserEntity userEntity =UserEntity.fromJson(value);
-        print("userEntity$value");
+
         if(userEntity.success){
           Provider.of<CounterModel>(context).increment(userEntity);
           ToastUtils.showToast("修改成功");
         }else{
-          ToastUtils.showToast("账号或用户名不匹配");
+          ToastUtils.showToast("修改失败");
         }
 
 

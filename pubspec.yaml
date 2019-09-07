@@ -54,6 +54,7 @@ flutter:
   #  - images/a_dot_burr.jpeg
   #  - images/a_dot_ham.jpeg
   assets:
+    - images/img_bg.jpg
     - images/img_waves.gif
     - images/img_login_logo.png
     - images/img_login_pass.png

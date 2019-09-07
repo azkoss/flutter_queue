@@ -2,6 +2,7 @@
 // Created by ckckck on 2018/9/25.
 //
 import 'package:flutter_queue/generated/KColorConstant.dart';
+import 'package:flutter_queue/splash_page.dart';
 import 'package:flutter_queue/view/login/login.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +17,7 @@ void main() {
           primaryColor: Colors.orange,
         ),
         title: 'Flutter Tutorial',
-        home: Login(),
+        home: SplashPage(),
       ),
     ),
   );

@@ -16,7 +16,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class Login extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    ScreenUtil.instance = ScreenUtil(width: 1080, height: 1920)..init(context);
+    //ScreenUtil.instance = ScreenUtil(width: 1080, height: 1920)..init(context);
     //Scaffold是Material中主要的布局组件.
     return new Scaffold(
       backgroundColor: Colors.white,

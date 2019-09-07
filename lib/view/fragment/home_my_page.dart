@@ -7,6 +7,7 @@ import 'package:flutter_queue/view/fragment/my/home_order.dart';
 import 'package:flutter_queue/view/login/login.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeMyPage extends StatefulWidget {
   @override
@@ -372,7 +373,10 @@ class _HomeMyPageState extends State<HomeMyPage> {
                           barrierDismissible: false,
                           builder: (_) {
                             return CustomDialog(
-                              confirmCallback: () {//跳转到登陆页面
+                              confirmCallback: () async {//跳转到登陆页面
+                                SharedPreferences prefs = await SharedPreferences.getInstance();
+                                prefs.setString("username", null);
+                                prefs.setString("password", null);
                                 Navigator.pushAndRemoveUntil(
                                   context,
                                   new MaterialPageRoute(builder: (context) => new Login()),

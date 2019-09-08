@@ -51,8 +51,8 @@ class SelectMerchantState extends State<SelectMerchant> {
       body: mData.length <= 0
           ? RequestFailed() //请求失败
           : new Center(
-              child: MerchantList(mData),
-            ),
+        child: MerchantList(mData),
+      ),
     );
   }
 }
@@ -79,10 +79,10 @@ class itemBuild extends State<MerchantList> {
   ScrollController _controller = new ScrollController();
   String loadMoreText = "没有更多数据";
   TextStyle loadMoreTextStyle =
-      new TextStyle(color: const Color(0xFF999999), fontSize: 14.0);
+  new TextStyle(color: const Color(0xFF999999), fontSize: 14.0);
 
   RefreshController _refreshController =
-      RefreshController(initialRefresh: false);
+  RefreshController(initialRefresh: false);
 
   @override
   Widget build(BuildContext context) {
@@ -214,7 +214,7 @@ class itemBuild extends State<MerchantList> {
                     children: <Widget>[
                       Container(
                           margin:
-                              EdgeInsets.only(top: ScreenUtil().setHeight(10)),
+                          EdgeInsets.only(top: ScreenUtil().setHeight(10)),
                           child: Text(
                             mData.name != null ? mData.name : "",
                             style: TextStyle(
@@ -224,7 +224,7 @@ class itemBuild extends State<MerchantList> {
                           )),
                       Container(
                         margin:
-                            EdgeInsets.only(top: ScreenUtil().setHeight(15)),
+                        EdgeInsets.only(top: ScreenUtil().setHeight(15)),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -247,7 +247,7 @@ class itemBuild extends State<MerchantList> {
                       ),
                       Container(
                         margin:
-                            EdgeInsets.only(top: ScreenUtil().setHeight(15)),
+                        EdgeInsets.only(top: ScreenUtil().setHeight(15)),
                         child: Text(
                           "95代金券抵100",
                           style: TextStyle(fontSize: ScreenUtil().setSp(34)),

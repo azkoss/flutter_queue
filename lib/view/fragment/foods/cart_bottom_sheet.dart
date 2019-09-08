@@ -34,8 +34,8 @@ class CartBottomSheet extends StatelessWidget {
             buildItemsList(cart),
           Divider(),
           buildPriceInfo(cart),
-          SizedBox(height: 8),
-          addToCardButton(cart, context),
+          SizedBox(height: 3),
+          //addToCardButton(cart, context),
         ],
       ),
     );

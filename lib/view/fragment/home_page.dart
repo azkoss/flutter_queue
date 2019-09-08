@@ -9,7 +9,6 @@ import 'package:flutter_queue/utils/MyNetUtils.dart';
 import 'package:flutter_queue/utils/values.dart';
 import 'package:flutter_queue/view/failure/requestfailed.dart';
 import 'package:flutter_queue/view/fragment/home/add_queue.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 import 'foods/cart_bottom_sheet.dart';
@@ -51,7 +50,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        margin: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(36), vertical: ScreenUtil().setHeight(48)),
+        margin: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
         child: Column(
           children: <Widget>[
             buildAppBar(),

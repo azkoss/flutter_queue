@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_queue/bean/cart_model.dart';
+import 'package:flutter_queue/bean/result_entity.dart';
+import 'package:flutter_queue/bean/user_counter.dart';
+import 'package:flutter_queue/utils/MyNetUtils.dart';
+import 'package:flutter_queue/utils/toast.dart';
 import 'package:flutter_queue/utils/values.dart';
 import 'package:flutter_queue/view/fragment/checkout_page.dart';
 
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 ///弹出购物车
 class CartBottomSheet extends StatelessWidget {
   @override
@@ -34,8 +39,8 @@ class CartBottomSheet extends StatelessWidget {
             buildItemsList(cart),
           Divider(),
           buildPriceInfo(cart),
-          SizedBox(height: 3),
-          //addToCardButton(cart, context),
+          SizedBox(height: 8),
+          addToCardButton(cart, context),
         ],
       ),
     );
@@ -117,13 +122,16 @@ class CartBottomSheet extends StatelessWidget {
   Widget addToCardButton(cart, context) {
     return Center(
       child: RaisedButton(
-        child: Text('购物车', style: titleStyle),
+        child: Text('提交订单', style: titleStyle),
         onPressed: cart.cartItems.length == 0
             ? null
             : () {
+          CounterModel user = Provider.of<CounterModel>(context);
+          createOrder(user.counter.rows.id,cart);
                 //Navigator.of(context).pop();
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => CheckOutPage()));
+                /*Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => CheckOutPage()));*/
+                //ToastUtils.showToast("请前往购物车查看详细信息");
               },
         padding: EdgeInsets.symmetric(horizontal: 64, vertical: 12),
         color: mainColor,
@@ -131,4 +139,51 @@ class CartBottomSheet extends StatelessWidget {
       ),
     );
   }
+
+  ///创建订单
+  Future createOrder(String uid, MyCart cart) async {
+    double amount = 0;
+    for(int i = 0;i<cart.cartItems.length;i++){
+      amount=cart.cartItems[i].quantity*cart.cartItems[i].food.price+amount;
+    }
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String merchantId = prefs.getString("merchantId");
+    Map<String, dynamic> map = Map();
+    Map<String, dynamic> header = Map();
+    map["cid"] = merchantId;
+    map["uid"] = uid;
+    map["amount"] = amount;
+    //创建订单
+    MyNetUtil.instance.getData("orderClient/addOrder", (value) async {
+      ResultEntity resultEntity = ResultEntity.fromJson(value);
+      if (resultEntity.success) {
+        createOrderDetails(cart,merchantId,resultEntity.rows);
+        ToastUtils.showToast("提交订单成功");
+        cart.clearCart();
+      }
+    }, params: map, headers: header);
+  }
+
+
+  ///创建订单详情
+  bool createOrderDetails(MyCart cart, String merchantId,String did) {
+    bool isSuccess = false;
+
+    for(int i = 0;i<cart.cartItems.length;i++){
+      Map<String, dynamic> map = Map();
+      Map<String, dynamic> header = Map();
+      map["did"] = did;
+      map["cid"] = cart.cartItems[i].food.id;
+      map["amount"] = cart.cartItems[i].food.price*cart.cartItems[i].quantity;
+      map["num"] = cart.cartItems[i].quantity;
+      MyNetUtil.instance.getData("orderClient/addOrderDetails", (value) async {
+        ResultEntity resultEntity = ResultEntity.fromJson(value);
+        if (resultEntity.success) {
+          isSuccess = true;
+        }
+      }, params: map, headers: header);
+    }
+    return isSuccess;
+  }
+
 }

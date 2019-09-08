@@ -8,6 +8,7 @@ import 'package:flutter_queue/bean/user_counter.dart';
 import 'package:flutter_queue/utils/MyNetUtils.dart';
 import 'package:flutter_queue/utils/toast.dart';
 import 'package:flutter_queue/utils/values.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -47,7 +48,7 @@ class _CheckOutPageState extends State<CheckOutPage> with SingleTickerProviderSt
         controller: scrollController,
         physics: BouncingScrollPhysics(),
         child: Container(
-          margin: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+          margin: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(36), vertical: ScreenUtil().setHeight(48)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[

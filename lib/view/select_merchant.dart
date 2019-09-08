@@ -2,9 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_queue/bean/merchant_entity.dart';
 import 'package:flutter_queue/utils/MyNetUtils.dart';
-import 'package:flutter_queue/utils/view/runningheader.dart';
+import 'package:flutter_queue/utils/values.dart';
 import 'package:flutter_queue/view/failure/requestfailed.dart';
 import 'package:flutter_queue/view/homepage.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -15,7 +16,6 @@ class SelectMerchant extends StatefulWidget {
 }
 
 class SelectMerchantState extends State<SelectMerchant> {
-
   List<MerchantRow> mData = new List();
 
   @override
@@ -24,14 +24,8 @@ class SelectMerchantState extends State<SelectMerchant> {
     initData();
   }
 
-
   ///加载数据
   void initData() {
-    /*Navigator.pushAndRemoveUntil(
-              context,
-              new MaterialPageRoute(builder: (context) => new Home()),
-                  (route) => route == null,
-            );*/
     Map<String, dynamic> map = Map();
     Map<String, dynamic> header = Map();
     //获取所有餐厅
@@ -41,9 +35,7 @@ class SelectMerchantState extends State<SelectMerchant> {
       if (foodTypeEntity.success) {
         mData.clear();
         mData.addAll(foodTypeEntity.rows);
-        setState(() {
-
-        });
+        setState(() {});
       }
     }, params: map, headers: header);
   }
@@ -59,8 +51,8 @@ class SelectMerchantState extends State<SelectMerchant> {
       body: mData.length <= 0
           ? RequestFailed() //请求失败
           : new Center(
-        child: MerchantList(mData),
-      ),
+              child: MerchantList(mData),
+            ),
     );
   }
 }
@@ -68,8 +60,9 @@ class SelectMerchantState extends State<SelectMerchant> {
 ///餐厅列表
 // ignore: must_be_immutable
 class MerchantList extends StatefulWidget {
-  List<MerchantRow> mData =List<MerchantRow>();
-  MerchantList(List<MerchantRow> mData){
+  List<MerchantRow> mData = List<MerchantRow>();
+
+  MerchantList(List<MerchantRow> mData) {
     this.mData = mData;
   }
 
@@ -86,10 +79,10 @@ class itemBuild extends State<MerchantList> {
   ScrollController _controller = new ScrollController();
   String loadMoreText = "没有更多数据";
   TextStyle loadMoreTextStyle =
-  new TextStyle(color: const Color(0xFF999999), fontSize: 14.0);
+      new TextStyle(color: const Color(0xFF999999), fontSize: 14.0);
 
   RefreshController _refreshController =
-  RefreshController(initialRefresh: false);
+      RefreshController(initialRefresh: false);
 
   @override
   Widget build(BuildContext context) {
@@ -131,11 +124,10 @@ class itemBuild extends State<MerchantList> {
                 Navigator.push(
                   context,
                   new MaterialPageRoute(
-                      builder: (context) =>
-                      new Home(widget.mData[position])),
+                      builder: (context) => new Home(widget.mData[position])),
                 );
               },
-              child: getItem(widget.mData[position]),
+              child: getItems(widget.mData[position]),
             );
           },
           controller: _controller,
@@ -177,74 +169,108 @@ class itemBuild extends State<MerchantList> {
         if (foodTypeEntity.success) {
           widget.mData.clear();
           widget.mData.addAll(foodTypeEntity.rows);
-          setState(() {
-
-          });
+          setState(() {});
         }
       }, params: map, headers: header);
-    } else {
-    }
+    } else {}
 
     setState(() {});
   }
 
-  Widget getItem(MerchantRow mData) {
-    return Stack(
-      alignment: Alignment(1, -1.4),
-      children: <Widget>[
-        Container(
-          width: ScreenUtil.screenWidth,
-          height: ScreenUtil().setHeight(320),
-          decoration: BoxDecoration(
-            //设置背景图片
-            image: DecorationImage(
-              image: NetworkImage(mData.heads),
-              fit: BoxFit.cover,
+  Widget getItems(MerchantRow mData) {
+    return Card(
+      margin: EdgeInsets.only(
+          top: ScreenUtil().setWidth(20),
+          left: ScreenUtil().setWidth(20),
+          right: ScreenUtil().setWidth(20)),
+      //设置圆角
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(5.0))),
+      //color: Colors.white,
+      //设置阴影
+      elevation: 4.0,
+      child: Container(
+        margin: EdgeInsets.all(ScreenUtil().setHeight(20)),
+        child: Column(
+          children: <Widget>[
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                ClipRRect(
+                  borderRadius: BorderRadius.all(Radius.circular(6)),
+                  child: Image.network(
+                    mData.heads != null ? mData.heads : "",
+                    width: ScreenUtil().setWidth(260),
+                    height: ScreenUtil().setHeight(260),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.only(
+                      left: ScreenUtil().setWidth(20),
+                      top: ScreenUtil().setWidth(10)),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Container(
+                          margin:
+                              EdgeInsets.only(top: ScreenUtil().setHeight(10)),
+                          child: Text(
+                            mData.name != null ? mData.name : "",
+                            style: TextStyle(
+                                fontSize: ScreenUtil().setSp(60),
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold),
+                          )),
+                      Container(
+                        margin:
+                            EdgeInsets.only(top: ScreenUtil().setHeight(15)),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            RatingBar(
+                              initialRating: 4.5,
+                              direction: Axis.horizontal,
+                              itemCount: 5,
+                              itemSize: 17,
+                              unratedColor: Colors.black,
+                              itemPadding: EdgeInsets.only(right: 4.0),
+                              ignoreGestures: true,
+                              itemBuilder: (context, index) =>
+                                  Icon(Icons.star, color: mainColor),
+                              onRatingUpdate: (rating) {},
+                            ),
+                            Text('￥69/人'),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        margin:
+                            EdgeInsets.only(top: ScreenUtil().setHeight(15)),
+                        child: Text(
+                          "95代金券抵100",
+                          style: TextStyle(fontSize: ScreenUtil().setSp(34)),
+                        ),
+                      )
+                    ],
+                  ),
+                )
+              ],
             ),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start, //列里用这个
-            children: <Widget>[
-              Container(
-                //id
-                margin: EdgeInsets.only(
-                    top: ScreenUtil().setHeight(30),
-                    left: ScreenUtil().setWidth(39)),
-                child: Text(
-                  mData.name!=null?mData.name:"",
-                  style: TextStyle(
-                      fontSize: ScreenUtil().setSp(60),
-                      color: Colors.yellow,
-                      fontWeight: FontWeight.bold),
-                ),
+            Container(
+              margin: EdgeInsets.only(top: ScreenUtil().setHeight(15)),
+              child: Text(
+                mData.gender != null ? mData.gender : "",
+                style: TextStyle(
+                    fontSize: ScreenUtil().setSp(34),
+                    color: Colors.black87,
+                    height: 1.2),
               ),
-              Container(
-                //标题
-                margin: EdgeInsets.only(
-                    top: ScreenUtil().setHeight(20),
-                    left: ScreenUtil().setWidth(36)),
-                child: Text(
-                  mData.gender!=null?mData.gender:"",
-                  style: TextStyle(
-                      fontSize: ScreenUtil().setSp(34), color: Colors.white),
-                ),
-              ),
-              /*Container(
-                //描述
-                margin: EdgeInsets.only(
-                    top: ScreenUtil().setHeight(10),
-                    left: ScreenUtil().setWidth(39)),
-                child: Text(
-                  "${mData.phone}",
-                  style: TextStyle(
-                      fontSize: ScreenUtil().setSp(40), color: Colors.orange),
-                ),
-              )*/
-            ],
-          ),
+            )
+          ],
         ),
-      ],
+      ),
     );
   }
 }
-

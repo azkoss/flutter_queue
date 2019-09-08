@@ -57,13 +57,16 @@ class _HomeMyPageState extends State<HomeMyPage> {
                               color: Colors.white,
                               fontSize: ScreenUtil().setSp(40)),
                         ),
-                        Text(
-                          user.counter.rows.phone != null
-                              ? user.counter.rows.phone
-                              : "",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: ScreenUtil().setSp(32)),
+                        Container(
+                          margin: EdgeInsets.only(top: ScreenUtil().setWidth(15)),
+                          child: Text(
+                            user.counter.rows.phone != null
+                                ? user.counter.rows.phone
+                                : "",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: ScreenUtil().setSp(32)),
+                          ),
                         ),
                       ],
                     ),

@@ -1,3 +1,5 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_queue/bean/cart_model.dart';
 import 'package:flutter_queue/bean/food_entity.dart';
@@ -44,7 +46,7 @@ class _FoodCardState extends State<FoodCard> with SingleTickerProviderStateMixin
   Widget buildImage() {
     return ClipRRect(
       borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
-      child: Image.network(
+      child: /*Image.network(
         food.img!=null?food.img:"",
         fit: BoxFit.fill,
         height: MediaQuery.of(context).size.height / 6,
@@ -57,6 +59,14 @@ class _FoodCardState extends State<FoodCard> with SingleTickerProviderStateMixin
             ),
           );
         },
+      )*/
+      CachedNetworkImage(
+        imageUrl: food.img!=null?food.img:"",
+        placeholder: (context, url) => Center(child: CupertinoActivityIndicator()),
+        errorWidget: (context, url, error) => new Icon(Icons.error),
+        fit: BoxFit.fill,
+        height: MediaQuery.of(context).size.height / 6,
+
       ),
     );
   }
@@ -126,7 +136,12 @@ class _FoodCardState extends State<FoodCard> with SingleTickerProviderStateMixin
 
   addItemToCard() {
     final snackBar = SnackBar(
-      content: Text('${food.name} 成功加入购物车'),
+      content: Row(
+        children: <Widget>[
+          Text('${food.name}   ',style: TextStyle(color: Colors.blue),),
+          Text("成功加入购物车")
+        ],
+      ),
       duration: Duration(milliseconds: 500),
     );
     Scaffold.of(context).showSnackBar(snackBar);

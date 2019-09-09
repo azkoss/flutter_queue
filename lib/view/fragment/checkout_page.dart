@@ -1,5 +1,7 @@
 import 'dart:ui';
 
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_queue/bean/cart_model.dart';
@@ -8,28 +10,35 @@ import 'package:flutter_queue/bean/user_counter.dart';
 import 'package:flutter_queue/utils/MyNetUtils.dart';
 import 'package:flutter_queue/utils/toast.dart';
 import 'package:flutter_queue/utils/values.dart';
-
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 ///购物车页面
 class CheckOutPage extends StatefulWidget {
   _CheckOutPageState createState() => _CheckOutPageState();
 }
 
-class _CheckOutPageState extends State<CheckOutPage> with SingleTickerProviderStateMixin {
+class _CheckOutPageState extends State<CheckOutPage>
+    with SingleTickerProviderStateMixin {
   var now = DateTime.now();
+
   get weekDay => DateFormat('EEEE').format(now);
+
   get day => DateFormat('dd').format(now);
+
   get month => DateFormat('MMMM').format(now);
   double oldTotal = 0;
   double total = 0;
 
   ScrollController scrollController = ScrollController();
   AnimationController animationController;
+
   @override
   void initState() {
-    animationController = AnimationController(vsync: this, duration: Duration(milliseconds: 200))..forward();
+    animationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 200))
+          ..forward();
     super.initState();
   }
 
@@ -99,7 +108,9 @@ class _CheckOutPageState extends State<CheckOutPage> with SingleTickerProviderSt
         AnimatedBuilder(
           animation: animationController,
           builder: (context, child) {
-            return Text('\￥ ${lerpDouble(oldTotal, total, animationController.value).toStringAsFixed(2)}', style: headerStyle);
+            return Text(
+                '\￥ ${lerpDouble(oldTotal, total, animationController.value).toStringAsFixed(2)}',
+                style: headerStyle);
           },
         ),
       ],
@@ -113,10 +124,10 @@ class _CheckOutPageState extends State<CheckOutPage> with SingleTickerProviderSt
       child: RaisedButton(
         child: Text('提交订单', style: titleStyle),
         onPressed: () {
-          if(cart.cartItems.length>0) {
+          if (cart.cartItems.length > 0) {
             CounterModel user = Provider.of<CounterModel>(context);
-            createOrder(user.counter.rows.id,cart);
-          }else{
+            createOrder(user.counter.rows.id, cart);
+          } else {
             ToastUtils.showToast("当前购物车为空");
           }
           //Navigator.of(context).pop();
@@ -131,8 +142,9 @@ class _CheckOutPageState extends State<CheckOutPage> with SingleTickerProviderSt
   ///创建订单
   Future createOrder(String uid, MyCart cart) async {
     double amount = 0;
-    for(int i = 0;i<cart.cartItems.length;i++){
-      amount=cart.cartItems[i].quantity*cart.cartItems[i].food.price+amount;
+    for (int i = 0; i < cart.cartItems.length; i++) {
+      amount =
+          cart.cartItems[i].quantity * cart.cartItems[i].food.price + amount;
     }
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String merchantId = prefs.getString("merchantId");
@@ -145,9 +157,10 @@ class _CheckOutPageState extends State<CheckOutPage> with SingleTickerProviderSt
     MyNetUtil.instance.getData("orderClient/addOrder", (value) async {
       ResultEntity resultEntity = ResultEntity.fromJson(value);
       if (resultEntity.success) {
-        bool isSuccess = createOrderDetails(cart,merchantId,resultEntity.rows);
+        bool isSuccess =
+            createOrderDetails(cart, merchantId, resultEntity.rows);
         ToastUtils.showToast("提交订单成功");
-        if(isSuccess){
+        if (isSuccess) {
           setState(() {
             cart.clearCart();
             ToastUtils.showToast("提交订单成功");
@@ -158,15 +171,15 @@ class _CheckOutPageState extends State<CheckOutPage> with SingleTickerProviderSt
   }
 
   ///创建订单详情
-  bool createOrderDetails(MyCart cart, String merchantId,String did) {
+  bool createOrderDetails(MyCart cart, String merchantId, String did) {
     bool isSuccess = false;
 
-    for(int i = 0;i<cart.cartItems.length;i++){
+    for (int i = 0; i < cart.cartItems.length; i++) {
       Map<String, dynamic> map = Map();
       Map<String, dynamic> header = Map();
       map["did"] = did;
       map["cid"] = cart.cartItems[i].food.id;
-      map["amount"] = cart.cartItems[i].food.price*cart.cartItems[i].quantity;
+      map["amount"] = cart.cartItems[i].food.price * cart.cartItems[i].quantity;
       map["num"] = cart.cartItems[i].quantity;
       MyNetUtil.instance.getData("orderClient/addOrderDetails", (value) async {
         ResultEntity resultEntity = ResultEntity.fromJson(value);
@@ -180,8 +193,6 @@ class _CheckOutPageState extends State<CheckOutPage> with SingleTickerProviderSt
     }
     return isSuccess;
   }
-
-
 
   Widget buildCartItemList(MyCart cart, CartItem cartModel) {
     return Card(
@@ -197,7 +208,13 @@ class _CheckOutPageState extends State<CheckOutPage> with SingleTickerProviderSt
               fit: FlexFit.tight,
               child: ClipRRect(
                 borderRadius: BorderRadius.all(Radius.circular(16)),
-                child: Image.network(cartModel.food.img!=null?cartModel.food.img:""),
+                child: CachedNetworkImage(
+                  imageUrl:
+                      cartModel.food.img != null ? cartModel.food.img : "",
+                  placeholder: (context, url) =>
+                      Center(child: CupertinoActivityIndicator()),
+                  errorWidget: (context, url, error) => new Icon(Icons.error),
+                ),
               ),
             ),
             Flexible(
@@ -229,7 +246,8 @@ class _CheckOutPageState extends State<CheckOutPage> with SingleTickerProviderSt
                         child: Icon(Icons.remove_circle),
                       ),
                       Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 2),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 16.0, vertical: 2),
                         child: Text('${cartModel.quantity}', style: titleStyle),
                       ),
                       InkWell(
@@ -278,6 +296,4 @@ class _CheckOutPageState extends State<CheckOutPage> with SingleTickerProviderSt
       ),
     );
   }
-
-
 }

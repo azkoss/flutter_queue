@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_queue/bean/merchant_entity.dart';
@@ -198,8 +199,16 @@ class itemBuild extends State<MerchantList> {
               children: <Widget>[
                 ClipRRect(
                   borderRadius: BorderRadius.all(Radius.circular(6)),
-                  child: Image.network(
+                  child: /*Image.network(
                     mData.heads != null ? mData.heads : "",
+                    width: ScreenUtil().setWidth(260),
+                    height: ScreenUtil().setHeight(260),
+                    fit: BoxFit.cover,
+                  )*/
+                  CachedNetworkImage(
+                    imageUrl: mData.heads != null ? mData.heads : "",
+                    placeholder: (context, url) => Center(child: CupertinoActivityIndicator()),
+                    errorWidget: (context, url, error) => new Icon(Icons.error),
                     width: ScreenUtil().setWidth(260),
                     height: ScreenUtil().setHeight(260),
                     fit: BoxFit.cover,

@@ -1,3 +1,5 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_queue/bean/cart_model.dart';
 import 'package:flutter_queue/bean/food_entity.dart';
@@ -50,32 +52,27 @@ class _FoodCardState extends State<MerchantFoodCard>
   Widget buildImage() {
     return ClipRRect(
       borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
-      child: InkWell(
-        onTap: () {
-          Navigator.push(
-            context,
-            new MaterialPageRoute(builder: (context) => new UpdateFood(food)),
+      child: /*Image.network(
+        food.img!=null?food.img:"",
+        fit: BoxFit.fill,
+        height: MediaQuery.of(context).size.height / 6,
+        loadingBuilder: (context, Widget child, ImageChunkEvent progress) {
+          if (progress == null) return child;
+          return Center(
+            child: Padding(
+              padding: EdgeInsets.all(32),
+              child: CircularProgressIndicator(value: progress.expectedTotalBytes != null ? progress.cumulativeBytesLoaded / progress.expectedTotalBytes : null),
+            ),
           );
-          ToastUtils.showToast("sss");
         },
-        child: Image.network(
-          food.img != null ? food.img : "",
-          fit: BoxFit.fill,
-          height: MediaQuery.of(context).size.height / 6,
-          loadingBuilder: (context, Widget child, ImageChunkEvent progress) {
-            if (progress == null) return child;
-            return Center(
-              child: Padding(
-                padding: EdgeInsets.all(32),
-                child: CircularProgressIndicator(
-                    value: progress.expectedTotalBytes != null
-                        ? progress.cumulativeBytesLoaded /
-                            progress.expectedTotalBytes
-                        : null),
-              ),
-            );
-          },
-        ),
+      )*/
+      CachedNetworkImage(
+        imageUrl: food.img!=null?food.img:"",
+        placeholder: (context, url) => Center(child: CupertinoActivityIndicator()),
+        errorWidget: (context, url, error) => new Icon(Icons.error),
+        fit: BoxFit.fill,
+        height: MediaQuery.of(context).size.height / 6,
+
       ),
     );
   }

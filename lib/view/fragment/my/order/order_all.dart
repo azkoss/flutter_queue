@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_queue/bean/order_list_entity.dart';
@@ -256,8 +257,13 @@ class HomeEvaluateAllState extends State<OrderAll> {
             fit: FlexFit.tight,
             child: ClipRRect(
               borderRadius: BorderRadius.all(Radius.circular(16)),
-              child: Image.network(
+              child: /*Image.network(
                 cartModel.food.img != null ? cartModel.food.img : "",
+              )*/
+              CachedNetworkImage(
+                imageUrl: cartModel.food.img != null ? cartModel.food.img : "",
+                placeholder: (context, url) => Center(child: CupertinoActivityIndicator()),
+                errorWidget: (context, url, error) => new Icon(Icons.error),
               ),
             ),
           ),

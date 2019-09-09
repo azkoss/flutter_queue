@@ -31,6 +31,8 @@ class BottomNavigationWidgetState extends State<BottomNavigationWidget>
     _navigationViews = <NavigationIconView>[
       new NavigationIconView(
           icon: new Icon(Icons.home), title: new Text("首页"), vsync: this),
+      new NavigationIconView(
+          icon: new Icon(Icons.queue), title: new Text("排队"), vsync: this),
       // vsync 默认属性和参数
       new NavigationIconView(
           icon: new Icon(Icons.book), title: new Text("购物车"), vsync: this),

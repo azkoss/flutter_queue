@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_queue/bean/merchant_entity.dart';
 import 'package:flutter_queue/view/bottomnavigation.dart';
+import 'package:flutter_queue/view/fragment/home/add_queue.dart';
 import 'package:flutter_queue/view/fragment/home_my_page.dart';
 
 
@@ -24,7 +25,7 @@ class PlaygroundState extends State<Home> {
 
   @override
   void initState(){
-    list..add(MyHomePage(widget.merchantRow))..add(CheckOutPage())..add(HomeMyPage());
+    list..add(MyHomePage(widget.merchantRow))..add(AddQueue(widget.merchantRow))..add(CheckOutPage())..add(HomeMyPage());
     super.initState(); //无名无参需要调用
   }
 

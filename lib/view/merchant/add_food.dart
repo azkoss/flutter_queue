@@ -210,7 +210,8 @@ class PlaygroundState extends State<AddFood> {
       map["name"] = name.text;
       map["price"] = price.text;
       map["remark"] = remark.text;
-      map["img"] = img.text;
+      map["img"] = Uri.encodeComponent(img.text);
+
       MyNetUtil.instance.getData("foodClient/addFood", (value) async {
         ResultEntity resultEntity = ResultEntity.fromJson(value);
         if (resultEntity.success) {
@@ -222,6 +223,7 @@ class PlaygroundState extends State<AddFood> {
       }, params: map);
     } else {
       print("请填写完整信息");
+      ToastUtils.showToast("请填写完整信息");
     }
   }
 }

@@ -74,7 +74,13 @@ class PlaygroundState extends State<UpdateFood> {
                     icon: Icon(Icons.text_fields),
                     hintText: "请输入菜品名称",
                   ),
-                  controller: name = new TextEditingController(text: names),
+                  controller: name = new TextEditingController.fromValue(TextEditingValue(
+                    // 设置内容
+                      text: names,
+                      // 保持光标在最后
+                      selection: TextSelection.fromPosition(TextPosition(
+                          affinity: TextAffinity.downstream,
+                          offset: names.length)))),
                   onChanged: (value) {
                     names = value;
                   },
@@ -93,7 +99,13 @@ class PlaygroundState extends State<UpdateFood> {
                     icon: Icon(Icons.text_fields),
                     hintText: "请输入菜品价格",
                   ),
-                  controller: price = new TextEditingController(text: prices),
+                  controller: price = new TextEditingController.fromValue(TextEditingValue(
+                    // 设置内容
+                      text: prices,
+                      // 保持光标在最后
+                      selection: TextSelection.fromPosition(TextPosition(
+                          affinity: TextAffinity.downstream,
+                          offset: prices.length)))),
                   onChanged: (value) {
                     prices = value;
                   },
@@ -112,7 +124,13 @@ class PlaygroundState extends State<UpdateFood> {
                     icon: Icon(Icons.text_fields),
                     hintText: "请输入菜品描述",
                   ),
-                  controller: remark = new TextEditingController(text: remarks),
+                  controller: remark = new TextEditingController.fromValue(TextEditingValue(
+                    // 设置内容
+                      text: remarks,
+                      // 保持光标在最后
+                      selection: TextSelection.fromPosition(TextPosition(
+                          affinity: TextAffinity.downstream,
+                          offset: remarks.length)))),
                   onChanged: (value) {
                     remarks = value;
                   },
@@ -131,7 +149,13 @@ class PlaygroundState extends State<UpdateFood> {
                     icon: Icon(Icons.text_fields),
                     hintText: "请输入菜品样式地址",
                   ),
-                  controller: img = new TextEditingController(text: imgs),
+                  controller: img = new TextEditingController.fromValue(TextEditingValue(
+                    // 设置内容
+                      text: imgs,
+                      // 保持光标在最后
+                      selection: TextSelection.fromPosition(TextPosition(
+                          affinity: TextAffinity.downstream,
+                          offset: imgs.length)))),
                   onChanged: (value) {
                     imgs = value;
                   },
@@ -189,7 +213,7 @@ class PlaygroundState extends State<UpdateFood> {
       map["name"] = name.text;
       map["price"] = price.text;
       map["remark"] = remark.text;
-      map["img"] = widget.food.img;
+      map["img"] = Uri.encodeComponent(img.text);
       MyNetUtil.instance.getData("foodClient/updateFood", (value) async {
         ResultEntity resultEntity = ResultEntity.fromJson(value);
         if (resultEntity.success) {
@@ -201,6 +225,7 @@ class PlaygroundState extends State<UpdateFood> {
       }, params: map);
     } else {
       print("请填写完整信息");
+      ToastUtils.showToast("请填写完整信息");
     }
   }
 }

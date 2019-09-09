@@ -15,6 +15,7 @@ void main() {
         debugShowCheckedModeBanner: false, //取出debug
         theme: ThemeData(          // Add the 3 lines from here...
           primaryColor: Colors.orange,
+          platform: TargetPlatform.iOS,//右滑返回
         ),
         title: 'Flutter Tutorial',
         home: SplashPage(),

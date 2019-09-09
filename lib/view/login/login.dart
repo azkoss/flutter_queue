@@ -1,11 +1,9 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_queue/bean/user_counter.dart';
 import 'package:flutter_queue/bean/user_entity.dart';
 import 'package:flutter_queue/utils/MyNetUtils.dart';
 import 'package:flutter_queue/utils/toast.dart';
-import 'package:flutter_queue/view/homepage.dart';
 import 'package:flutter_queue/view/merchant/merchant_home_page.dart';
 import 'package:flutter_queue/view/select_merchant.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -149,7 +147,8 @@ class _LoginPageState extends State<LoginPage> {
                       children: <Widget>[
                         new Container(
                             width: ScreenUtil().setWidth(780),
-                            margin: EdgeInsets.only(top:ScreenUtil().setHeight(60)),
+                            margin: EdgeInsets.only(
+                                top: ScreenUtil().setHeight(60)),
                             /*padding: new EdgeInsets.fromLTRB(
                                 leftRightPadding,
                                 ScreenUtil().setHeight(10),
@@ -257,61 +256,63 @@ class _LoginPageState extends State<LoginPage> {
 
   BuildContext windowContext;
 
-
   //登录
   void sendServer() async {
     if (_userNameController.text != null &&
         _userPassController.text != null &&
         _userNameController.text != "" &&
         _userPassController.text != "") {
-
       login();
     } else {
       print("账号或密码为空");
     }
   }
+
   ProgressDialog pr;
 
   void login() {
-    pr = new ProgressDialog(context,ProgressDialogType.Normal);
+    pr = new ProgressDialog(context, ProgressDialogType.Normal);
     pr.setMessage('正在登录...');
     pr.show();
     Map<String, String> map = Map();
     /*map["username"] = _userNameController.text;
       map["password"] = _userPassController.text;*/
-    MyNetUtil.instance.postData("userClient/login?username=${_userNameController.text}&password=${_userPassController.text}", (value) async {
-      UserEntity userEntity =UserEntity.fromJson(value);
+    MyNetUtil.instance.postData(
+        "userClient/login?username=${_userNameController.text}&password=${_userPassController.text}",
+        (value) async {
+      UserEntity userEntity = UserEntity.fromJson(value);
       print("userEntity$value");
-      if(userEntity.success){
+      if (userEntity.success) {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.setString("username", _userNameController.text);
         prefs.setString("password", _userPassController.text);
         Provider.of<CounterModel>(context).increment(userEntity);
-        if(userEntity.rows.merchant==0){
-
+        if (userEntity.rows.merchant == 0) {
           //先进行餐厅选择
           Navigator.pushAndRemoveUntil(
             context,
             new MaterialPageRoute(builder: (context) => new SelectMerchant()),
-                (route) => route == null,
+            (route) => route == null,
           );
           ToastUtils.showToast("登录成功");
-        }else if(userEntity.rows.merchant==2){
+        } else if (userEntity.rows.merchant == 2) {
           Navigator.pushAndRemoveUntil(
-              context,
-              new MaterialPageRoute(builder: (context) => new MerChantHome(userEntity.rows)),
-                  (route) => route == null,
-            );
+            context,
+            new MaterialPageRoute(
+                builder: (context) => new MerChantHome(userEntity.rows)),
+            (route) => route == null,
+          );
           ToastUtils.showToast("登录成功");
-        }else{
+        } else {
+          Navigator.of(context).pop();
           ToastUtils.showToast("账号被冻结或权限不够");
         }
-      }else{
+      } else {
+        Navigator.of(context).pop();
         ToastUtils.showToast("账号或用户名不匹配");
       }
       pr.hide();
     }, params: map);
     pr.hide();
   }
-
 }

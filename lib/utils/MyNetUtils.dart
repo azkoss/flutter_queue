@@ -8,10 +8,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 class MyNetUtil {
   BaseOptions baseOptions = BaseOptions(
     method:POST,
-    connectTimeout:50000,
+    connectTimeout:15000,
     contentType: ContentType('application', 'json', charset: 'utf-8'),
-    receiveTimeout: 50000,
+    receiveTimeout: 15000,
     baseUrl: "http://114.116.42.235:8088/queue/",
+    //baseUrl: "http://192.168.191.1:8080/",
     followRedirects: true,
   );
   static Map<String, dynamic> smap = new Map();
@@ -227,6 +228,7 @@ class MyNetUtil {
     } else {
       url += "?";
     }
+    //Uri.encodeComponent(url);
     return url;
   }
 }

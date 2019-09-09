@@ -87,7 +87,7 @@ class _HomeMyPageState extends State<HomeMyPage> {
                     children: <Widget>[
                       InkWell(
                         onTap: (){
-                          ToastUtils.showToast("个人信息");
+                          //ToastUtils.showToast("个人信息");
                           Navigator.push(
                             context,
                             new MaterialPageRoute(
@@ -114,7 +114,7 @@ class _HomeMyPageState extends State<HomeMyPage> {
                                   ),
                                 ),
                                 Text(
-                                  "个人信息",
+                                  user.counter.rows.merchant==0?"个人信息":"餐厅信息  ",
                                   style: TextStyle(
                                     fontWeight: FontWeight.w500,
                                     fontSize: ScreenUtil().setSp(36),
@@ -563,19 +563,24 @@ class _HomeMyPageState extends State<HomeMyPage> {
                   children: <Widget>[
                     Column(
                       children: <Widget>[
-                        Container(
-                          height: ScreenUtil().setHeight(120),
-                          width: ScreenUtil().setHeight(120),
-                          decoration: BoxDecoration(
-                            borderRadius:
-                            BorderRadius.all(Radius.circular(100)),
-                            border: Border.all(
-                              color: Colors.white,
-                              width: ScreenUtil().setWidth(10),
-                            ),
-                            image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: AssetImage("img/header_my.jpeg"),
+                        InkWell(
+                          onTap: (){
+                            ToastUtils.showToast("微信");
+                          },
+                          child: Container(
+                            height: ScreenUtil().setHeight(120),
+                            width: ScreenUtil().setHeight(120),
+                            decoration: BoxDecoration(
+                              borderRadius:
+                              BorderRadius.all(Radius.circular(100)),
+                              border: Border.all(
+                                color: Colors.white,
+                                width: ScreenUtil().setWidth(10),
+                              ),
+                              image: DecorationImage(
+                                fit: BoxFit.cover,
+                                image: AssetImage("images/img_wechart.png"),
+                              ),
                             ),
                           ),
                         ),
@@ -587,19 +592,24 @@ class _HomeMyPageState extends State<HomeMyPage> {
                     ),
                     Column(
                       children: <Widget>[
-                        Container(
-                          height: ScreenUtil().setHeight(120),
-                          width: ScreenUtil().setHeight(120),
-                          decoration: BoxDecoration(
-                            borderRadius:
-                            BorderRadius.all(Radius.circular(100)),
-                            border: Border.all(
-                              color: Colors.white,
-                              width: ScreenUtil().setWidth(10),
-                            ),
-                            image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: AssetImage("img/header_my.jpeg"),
+                        InkWell(
+                          onTap: (){
+                            ToastUtils.showToast("QQ");
+                          },
+                          child: Container(
+                            height: ScreenUtil().setHeight(120),
+                            width: ScreenUtil().setHeight(120),
+                            decoration: BoxDecoration(
+                              borderRadius:
+                              BorderRadius.all(Radius.circular(100)),
+                              border: Border.all(
+                                color: Colors.white,
+                                width: ScreenUtil().setWidth(10),
+                              ),
+                              image: DecorationImage(
+                                fit: BoxFit.cover,
+                                image: AssetImage("images/img_qq.png"),
+                              ),
                             ),
                           ),
                         ),
@@ -612,19 +622,24 @@ class _HomeMyPageState extends State<HomeMyPage> {
                     Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        Container(
-                          height: ScreenUtil().setHeight(120),
-                          width: ScreenUtil().setHeight(120),
-                          decoration: BoxDecoration(
-                            borderRadius:
-                            BorderRadius.all(Radius.circular(100)),
-                            border: Border.all(
-                              color: Colors.white,
-                              width: ScreenUtil().setWidth(10),
-                            ),
-                            image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: AssetImage("img/header_my.jpeg"),
+                        InkWell(
+                          onTap: (){
+                            ToastUtils.showToast("支付宝");
+                          },
+                          child: Container(
+                            height: ScreenUtil().setHeight(120),
+                            width: ScreenUtil().setHeight(120),
+                            decoration: BoxDecoration(
+                              borderRadius:
+                              BorderRadius.all(Radius.circular(100)),
+                              border: Border.all(
+                                color: Colors.white,
+                                width: ScreenUtil().setWidth(10),
+                              ),
+                              image: DecorationImage(
+                                fit: BoxFit.cover,
+                                image: AssetImage("images/img_alipay.png"),
+                              ),
                             ),
                           ),
                         ),
@@ -643,7 +658,7 @@ class _HomeMyPageState extends State<HomeMyPage> {
                   children: <Widget>[
                     InkWell(
                       onTap: (){
-
+                        Navigator.of(context).pop();
                       },
                       child: Container(
                         width: ScreenUtil().setWidth(665),

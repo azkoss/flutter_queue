@@ -47,7 +47,7 @@ class PlaygroundState extends State<HomeInformation> {
     CounterModel user = Provider.of<CounterModel>(context);
     return new Scaffold(
       appBar: new AppBar(
-        title: new Text("个人信息"),
+        title: new Text(user.counter.rows.merchant==0?"个人信息":"餐厅信息"),
         backgroundColor: Colors.orange, //设置appbar背景颜色
         centerTitle: true, //设置标题是否局中
       ),
@@ -68,7 +68,13 @@ class PlaygroundState extends State<HomeInformation> {
                     icon: Icon(Icons.text_fields),
                     hintText: "请输入昵称",
                   ),
-                  controller: name = new TextEditingController(text: names),
+                  controller: name = new TextEditingController.fromValue(TextEditingValue(
+                    // 设置内容
+                      text: names,
+                      // 保持光标在最后
+                      selection: TextSelection.fromPosition(TextPosition(
+                          affinity: TextAffinity.downstream,
+                          offset: names.length)))),
                 onChanged: (value) {
                   names = value;
                 },
@@ -76,15 +82,21 @@ class PlaygroundState extends State<HomeInformation> {
               Container(
                 height: ScreenUtil().setHeight(30),
               ),
-              Text("性别",style: TextStyle(fontSize: ScreenUtil().setSp(36)),),
+              Text(user.counter.rows.merchant==0?"性别":"简介",style: TextStyle(fontSize: ScreenUtil().setSp(36)),),
               TextField(
                 keyboardType: TextInputType.text,
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.all(10.0),
                   icon: Icon(Icons.text_fields),
-                  hintText: "请输入性别",
+                  hintText: user.counter.rows.merchant==0?"请输入性别":"请输入简介",
                 ),
-                controller: gender = new TextEditingController(text: genders),
+                controller: gender = new TextEditingController.fromValue(TextEditingValue(
+                  // 设置内容
+                    text: genders,
+                    // 保持光标在最后
+                    selection: TextSelection.fromPosition(TextPosition(
+                        affinity: TextAffinity.downstream,
+                        offset: genders.length)))),
                 onChanged: (value) {
                   genders = value;
                 },
@@ -92,15 +104,21 @@ class PlaygroundState extends State<HomeInformation> {
               Container(
                 height: ScreenUtil().setHeight(30),
               ),
-              Text("头像地址",style: TextStyle(fontSize: ScreenUtil().setSp(36)),),
+              Text(user.counter.rows.merchant==0?"头像地址":"Logo地址",style: TextStyle(fontSize: ScreenUtil().setSp(36)),),
               TextField(
                 keyboardType: TextInputType.text,
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.all(10.0),
                   icon: Icon(Icons.text_fields),
-                  hintText: "请输入头像地址",
+                  hintText: user.counter.rows.merchant==0?"请输入头像地址":"请输入Logo地址",
                 ),
-                controller: heads = new TextEditingController(text: head),
+                controller: heads = new TextEditingController.fromValue(TextEditingValue(
+                  // 设置内容
+                    text: head,
+                    // 保持光标在最后
+                    selection: TextSelection.fromPosition(TextPosition(
+                        affinity: TextAffinity.downstream,
+                        offset: head.length)))),
                 onChanged: (value) {
                   head = value;
                 },
@@ -116,7 +134,13 @@ class PlaygroundState extends State<HomeInformation> {
                   icon: Icon(Icons.text_fields),
                   hintText: "请输入联系方式",
                 ),
-                controller: phone = new TextEditingController(text: phones),
+                controller: phone = new TextEditingController.fromValue(TextEditingValue(
+                  // 设置内容
+                    text: phones,
+                    // 保持光标在最后
+                    selection: TextSelection.fromPosition(TextPosition(
+                        affinity: TextAffinity.downstream,
+                        offset: phones.length)))),
                 onChanged: (value) {
                   phones = value;
                 },
@@ -165,11 +189,13 @@ class PlaygroundState extends State<HomeInformation> {
         heads.text != "" &&
         phone.text != "" &&
         gender.text != "") {
+
+
       Map<String, String> map = Map();
       map["id"] = user.rows.id;
       map["gender"] = gender.text;
       map["name"] = name.text;
-      map["heads"] = "${user.rows.heads}";
+      map["heads"] = Uri.encodeComponent(user.rows.heads);
       map["phone"] = phone.text;
       print("哈哈哈"+map.toString());
       MyNetUtil.instance.getData("userClient/modifyInformation", (value) async {
@@ -186,6 +212,7 @@ class PlaygroundState extends State<HomeInformation> {
       }, params: map);
     } else {
       print("请填写完整信息");
+      ToastUtils.showToast("请填写完整信息");
     }
   }
 

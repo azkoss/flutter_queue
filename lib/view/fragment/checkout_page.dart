@@ -10,6 +10,7 @@ import 'package:flutter_queue/bean/user_counter.dart';
 import 'package:flutter_queue/utils/MyNetUtils.dart';
 import 'package:flutter_queue/utils/toast.dart';
 import 'package:flutter_queue/utils/values.dart';
+import 'package:flutter_queue/utils/view/customdialog.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -282,9 +283,24 @@ class _CheckOutPageState extends State<CheckOutPage>
                   ),
                   InkWell(
                     onTap: () {
-                      cart.removeAllInCart(cartModel.food);
-                      animationController.reset();
-                      animationController.forward();
+
+                      showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (_) {
+                            return CustomDialog(
+                              confirmCallback: () async {//
+                                cart.removeAllInCart(cartModel.food);
+                                animationController.reset();
+                                animationController.forward();
+
+                              },
+                              confirmContent: "删除",
+                              content: '你确定要删除此商品吗?',
+                              confirmColor: Colors.blue,
+                            );
+                          });
+
                     },
                     customBorder: roundedRectangle12,
                     child: Icon(Icons.delete_sweep, color: Colors.red),

@@ -264,7 +264,7 @@ class _CheckOutPageState extends State<MerchantCustomer>
     Map<String, dynamic> header = Map();
     map["id"] = id;
     map["sid"] = sid;
-    MyNetUtil.instance.getData("queueClient/deleteQueue", (value) async {
+    MyNetUtil.instance.getData("queueClient/deleteQueueById", (value) async {
       print("早早早d菜：${value.toString()}");
       //获取所有菜系
       ResultEntity resultEntity = ResultEntity.fromJson(value);

@@ -50,9 +50,18 @@ class _FoodCardState extends State<MerchantFoodCard>
   }
 
   Widget buildImage() {
-    return ClipRRect(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
-      child: /*Image.network(
+    return InkWell(
+      onTap: (){
+        Navigator.push(
+          context,
+          new MaterialPageRoute(
+              builder: (context) =>
+              new UpdateFood(widget.food)),
+        );
+      },
+      child: ClipRRect(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+        child: /*Image.network(
         food.img!=null?food.img:"",
         fit: BoxFit.fill,
         height: MediaQuery.of(context).size.height / 6,
@@ -66,13 +75,14 @@ class _FoodCardState extends State<MerchantFoodCard>
           );
         },
       )*/
-      CachedNetworkImage(
-        imageUrl: food.img!=null?food.img:"",
-        placeholder: (context, url) => Center(child: CupertinoActivityIndicator()),
-        errorWidget: (context, url, error) => new Icon(Icons.error),
-        fit: BoxFit.fill,
-        height: MediaQuery.of(context).size.height / 6,
+        CachedNetworkImage(
+          imageUrl: food.img!=null?food.img:"",
+          placeholder: (context, url) => Center(child: CupertinoActivityIndicator()),
+          errorWidget: (context, url, error) => new Icon(Icons.error),
+          fit: BoxFit.fill,
+          height: MediaQuery.of(context).size.height / 6,
 
+        ),
       ),
     );
   }

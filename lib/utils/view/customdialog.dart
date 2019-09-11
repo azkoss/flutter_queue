@@ -96,7 +96,7 @@ class _CustomDialogState extends State<CustomDialog> {
                     _dismissDialog();
                   },
                   shape: StadiumBorder(
-                      side: BorderSide(color: Colors.black54, width: 0.5)),
+                      side: BorderSide(color: Colors.black12, width: 0.5)),
                 ),
               ),
               flex: 1,
@@ -120,7 +120,7 @@ class _CustomDialogState extends State<CustomDialog> {
                     _confirmDialog();
                   },
                   shape: StadiumBorder(
-                      side: BorderSide(color: Colors.lightBlueAccent)),
+                      side: BorderSide(color: Colors.blue)),
                 ),
               ),
               flex: 1,
